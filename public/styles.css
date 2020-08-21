@@ -1,0 +1,10 @@
+#video-container {
+  display: flex;
+  justify-content: center;
+  background-color: red;
+}
+
+video {
+  height: 400px;
+  width: 400px;
+}
