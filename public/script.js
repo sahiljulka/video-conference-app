@@ -3,7 +3,7 @@ var socket = io();
 var peer = new Peer(undefined, {
   path: "/peerjs",
   host: "/",
-  port: 3000,
+  port: 443,
 });
 var videoContainer = document.querySelector("#video-container");
 const $ = document.querySelector.bind(document);
