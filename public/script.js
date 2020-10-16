@@ -119,3 +119,10 @@ const muteUnMuteVideo = (muted) => {
           <span>Stop Video</span>`;
   $(".video").innerHTML = html;
 };
+
+const leaveMeeting = () => {
+  videoContainer.innerHTML = "<h1> You have left the meeting </h1>";
+  userMediaStream.getTracks().forEach(function (track) {
+    track.stop();
+  });
+};
