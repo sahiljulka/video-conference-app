@@ -35,20 +35,25 @@ io.on("connection", (socket) => {
     console.log("a user disconnected");
   });
 
+  // triggered when the leave meeting button is clicked
+  socket.on("user-leave", (ROOM_ID, userId) => {
+    socket.leave(ROOM_ID);
+    socket.to(ROOM_ID).broadcast.emit("user-left", userId);
+    console.log(`${userId} left the room`);
+  });
+
   socket.on("join-room", (roomId, userId) => {
-    console.log(`joined room ${roomId}`);
     socket.join(roomId);
 
     socket.to(roomId).broadcast.emit("user-connected", userId);
-    socket.on('message',message=>{
+    socket.on("message", (message) => {
       /**
        * we use io.to because we want even the sender to receive the message that it has sent to show on the chat screen(due to our implementation)
        * if we use socket.to(roomId).broadcast.emit() then the message would go to other clients not the sender
-       */ 
+       */
       io.to(roomId).emit("newchat", message);
-    })
+    });
   });
-
 });
 
 http.listen(PORT, (req, res) => {
