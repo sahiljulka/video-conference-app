@@ -41,7 +41,21 @@ navigator.mediaDevices.getUserMedia(constraints).then(function (mediaStream) {
   // to tell to user that a new user has joined the same room and
   // make a call connection request to the new person by sending my own stream
   socket.on("user-connected", (userId) => {
+    var li = document.createElement("li");
+
+    //depict the new user that joined the meeting on chat panel
+    li.innerHTML = `${userId} joined the meeting`;
+    $(".main__content").appendChild(li);
+    scrollDownMessages();
     connectToNewUser(userId, mediaStream);
+  });
+
+  //to notify users still in the room the id of the user that left is displayed in the chat panel
+  socket.on("user-left", (userId) => {
+    var li = document.createElement("li");
+    li.innerHTML = `${userId} left the meeting`;
+    $(".main__content").appendChild(li);
+    scrollDownMessages();
   });
 
   // to answer to the call made by existing users in the room
@@ -121,7 +135,9 @@ const muteUnMuteVideo = (muted) => {
 };
 
 const leaveMeeting = () => {
+  let userId = peer.id;
   videoContainer.innerHTML = "<h1> You have left the meeting </h1>";
+  socket.emit("user-leave", ROOM_ID, userId);
   userMediaStream.getTracks().forEach(function (track) {
     track.stop();
   });
